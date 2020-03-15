@@ -18,19 +18,19 @@ plot_testdim_mbplsda <- function (obj, filename="PlotTestdimMbplsda"){
 
   # means
   if("ER" %in% outputs){
-    ERvM.mean <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","mean"]) 
-    ERcM.mean <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","mean"])
-    ERvG.mean <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","mean"])
-    ERcG.mean <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","mean"])
-    ERvT.mean <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","mean"]) 
-    ERcT.mean <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","mean"])
+    ERvM.mean <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","mean"], stringsAsFactors = TRUE) 
+    ERcM.mean <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","mean"], stringsAsFactors = TRUE)
+    ERvG.mean <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","mean"], stringsAsFactors = TRUE)
+    ERcG.mean <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","mean"], stringsAsFactors = TRUE)
+    ERvT.mean <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","mean"], stringsAsFactors = TRUE) 
+    ERcT.mean <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","mean"], stringsAsFactors = TRUE)
   }
   if((nNoBin==0) & ("AUC" %in% outputs)){
-    AUCv.mean <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","mean"])
-    AUCc.mean <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","mean"])
+    AUCv.mean <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","mean"], stringsAsFactors = TRUE)
+    AUCc.mean <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","mean"], stringsAsFactors = TRUE)
   }
 
-  erreurs <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf))
+  erreurs <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf), stringsAsFactors = TRUE)
   
   if("ER" %in% outputs){
     if("max" %in% algo){
@@ -50,19 +50,19 @@ plot_testdim_mbplsda <- function (obj, filename="PlotTestdimMbplsda"){
   
   # CI inf
   if("ER" %in% outputs){
-    ERvM.ICinf <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","95CIinf"]) 
-    ERcM.ICinf <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","95CIinf"])
-    ERvG.ICinf <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","95CIinf"])
-    ERcG.ICinf <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","95CIinf"])
-    ERvT.ICinf <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","95CIinf"]) 
-    ERcT.ICinf <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","95CIinf"])
+    ERvM.ICinf <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","95CIinf"], stringsAsFactors = TRUE) 
+    ERcM.ICinf <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","95CIinf"], stringsAsFactors = TRUE)
+    ERvG.ICinf <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","95CIinf"], stringsAsFactors = TRUE)
+    ERcG.ICinf <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","95CIinf"], stringsAsFactors = TRUE)
+    ERvT.ICinf <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","95CIinf"], stringsAsFactors = TRUE) 
+    ERcT.ICinf <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","95CIinf"], stringsAsFactors = TRUE)
   }
   if((nNoBin==0) & ("AUC" %in% outputs)){
-    AUCv.ICinf <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","95CIinf"])
-    AUCc.ICinf <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","95CIinf"])
+    AUCv.ICinf <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","95CIinf"], stringsAsFactors = TRUE)
+    AUCc.ICinf <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","95CIinf"], stringsAsFactors = TRUE)
   }
   
-  erreursICinf <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf))
+  erreursICinf <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf), stringsAsFactors = TRUE)
   if("ER" %in% outputs){
     if("max" %in% algo){
       erreursICinf <- cbind(erreursICinf,ERvM.ICinf, ERcM.ICinf)
@@ -80,19 +80,19 @@ plot_testdim_mbplsda <- function (obj, filename="PlotTestdimMbplsda"){
  
   # CI sup
   if("ER" %in% outputs){
-    ERvM.ICsup <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","95CIsup"]) 
-    ERcM.ICsup <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","95CIsup"])
-    ERvG.ICsup <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","95CIsup"])
-    ERcG.ICsup <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","95CIsup"])
-    ERvT.ICsup <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","95CIsup"]) 
-    ERcT.ICsup <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","95CIsup"])
+    ERvM.ICsup <- data.frame(globalERvM=obj$ErrorRateVglobal.max[obj$ErrorRateVglobal.max$variable=="global","95CIsup"], stringsAsFactors = TRUE) 
+    ERcM.ICsup <- data.frame(globalERcM=obj$ErrorRateCglobal.max[obj$ErrorRateCglobal.max$variable=="global","95CIsup"], stringsAsFactors = TRUE)
+    ERvG.ICsup <- data.frame(globalERvG=obj$ErrorRateVglobal.gravity[obj$ErrorRateVglobal.gravity$variable=="global","95CIsup"], stringsAsFactors = TRUE)
+    ERcG.ICsup <- data.frame(globalERcG=obj$ErrorRateCglobal.gravity[obj$ErrorRateCglobal.gravity$variable=="global","95CIsup"], stringsAsFactors = TRUE)
+    ERvT.ICsup <- data.frame(globalERvT=obj$ErrorRateVglobal.threshold[obj$ErrorRateVglobal.threshold$variable=="global","95CIsup"], stringsAsFactors = TRUE) 
+    ERcT.ICsup <- data.frame(globalERcT=obj$ErrorRateCglobal.threshold[obj$ErrorRateCglobal.threshold$variable=="global","95CIsup"], stringsAsFactors = TRUE)
   }
   if((nNoBin==0) & ("AUC" %in% outputs)){
-    AUCv.ICsup <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","95CIsup"])
-    AUCc.ICsup <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","95CIsup"])
+    AUCv.ICsup <- data.frame(meanAUCv=obj$AUCv.global[obj$AUCv.global$variable=="Mean","95CIsup"], stringsAsFactors = TRUE)
+    AUCc.ICsup <- data.frame(meanAUCc=obj$AUCc.global[obj$AUCc.global$variable=="Mean","95CIsup"], stringsAsFactors = TRUE)
   }
   
-  erreursICsup <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf))
+  erreursICsup <- data.frame(dimlab=paste0(rep("Ax",nf),1:nf), stringsAsFactors = TRUE)
   if("ER" %in% outputs){
     if("max" %in% algo){
       erreursICsup <- cbind(erreursICsup,ERvM.ICsup, ERcM.ICsup)

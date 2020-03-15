@@ -35,9 +35,9 @@ mbplsda <- function(dudiY, ktabX, scale = TRUE, option = c("uniform", "none"), s
   sdY          <- apply(as.matrix(dudiY$tab), 2, sd)   # biaised sd
   blo          <- ktabX$blo
   nblo         <- length(ktabX$blo)
-  meanX        <- colMeans(cbind.data.frame(lapply(unclass(ktabX)[1 : nblo], scale, center = FALSE, scale = FALSE)))
+  meanX        <- colMeans(cbind.data.frame(lapply(unclass(ktabX)[1 : nblo], scale, center = FALSE, scale = FALSE),stringsAsFactors = TRUE))
   names(meanX) <- col.names(ktabX)
-  sdX          <- apply(cbind.data.frame(lapply(unclass(ktabX)[1 : nblo], scale, center = FALSE, scale = FALSE)), 2, sd) * sqrt((nr-1)/nr)  # biaised sd
+  sdX          <- apply(cbind.data.frame(lapply(unclass(ktabX)[1 : nblo], scale, center = FALSE, scale = FALSE),stringsAsFactors = TRUE), 2, sd) * sqrt((nr-1)/nr)  # biaised sd
  
   
   ## Pre-processing of the data frames (centering by default + biaised variances)
@@ -50,7 +50,7 @@ mbplsda <- function(dudiY, ktabX, scale = TRUE, option = c("uniform", "none"), s
     inertia <- lapply(1:nblo, function(k) inertie(Xk[[k]]))
     Xk      <- lapply(1:nblo, function(k) Xk[[k]] / sqrt(inertie(Xk[[k]])))
   }
-  X           <- cbind.data.frame(Xk)
+  X           <- cbind.data.frame(Xk,stringsAsFactors = TRUE)
   colnames(X) <- col.names(ktabX)
   
   
@@ -144,7 +144,7 @@ mbplsda <- function(dudiY, ktabX, scale = TRUE, option = c("uniform", "none"), s
     
     ## Deflation of the Xk datasets on the global components T
     Xk <- lapply(Xk, function(y) lm.wfit(x = as.matrix(res$lX[, h]), y = y, w = res$lw)$residuals)
-    X  <- as.matrix(cbind.data.frame(Xk))
+    X  <- as.matrix(cbind.data.frame(Xk,stringsAsFactors = TRUE))
   }
   
   
@@ -259,7 +259,7 @@ mbplsda <- function(dudiY, ktabX, scale = TRUE, option = c("uniform", "none"), s
   
   ## keep results for the nf dimensions (except eigenvalues and lX)
   res$eig <- res$eig[1:res$rank]
-  res$lX  <- data.frame(res$lX[, 1:res$rank])
+  res$lX  <- data.frame(res$lX[, 1:res$rank], stringsAsFactors = TRUE)
   colnames(res$lX) <- dimlab[1:res$rank]
   res$Tc1 <- do.call("rbind", res$Tc1)
   res$TlX <- do.call("rbind", res$TlX)

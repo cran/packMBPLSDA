@@ -34,7 +34,7 @@ plot_permut_mbplsda <- function(obj, filename="PlotPermutationTest", MainPlot="P
       abline(regressionM, lty=1, lwd=1)
       points(obj$prctGlob.Ychange.values[1,2],obj$ErrorRateVglobal.max[(obj$ErrorRateVglobal.max$variable=="global" & obj$ErrorRateVglobal.max$dataP == dimlabP[1]),"mean"], 
              col="black", pch=16)
-      legend("bottomright", c("ERv.max","ERv.max regression line","ERv.max without permut."), cex=1, 
+      legend("bottomright", legend = c("ERv.max","ERv.max regression line","ERv.max without permut."), cex=1, 
              lty=c(NA,1,NA), lwd=c(NA,1,NA), 
              pch=c(16,NA,16),col=c("grey","black","black"), pt.cex=c(0.8,NA,1))
     }
@@ -50,7 +50,7 @@ plot_permut_mbplsda <- function(obj, filename="PlotPermutationTest", MainPlot="P
       abline(regressionG, lty=1, lwd=1)
       points(obj$prctGlob.Ychange.values[1,2],obj$ErrorRateVglobal.gravity[(obj$ErrorRateVglobal.gravity$variable=="global" & obj$ErrorRateVglobal.gravity$dataP == dimlabP[1]),"mean"], 
              col="black", pch=16)
-      legend("bottomright", c("ERv.gravity","ERv.gravity regression line","ERv.gravity without permut."), cex=1, 
+      legend("bottomright", legend = c("ERv.gravity","ERv.gravity regression line","ERv.gravity without permut."), cex=1, 
              lty=c(NA,1,NA), lwd=c(NA,1,NA), 
              pch=c(16,NA,16),col=c("grey","black","black"), pt.cex=c(0.8,NA,1))
     }
@@ -66,7 +66,7 @@ plot_permut_mbplsda <- function(obj, filename="PlotPermutationTest", MainPlot="P
       abline(regressionT, lty=1, lwd=1)
       points(obj$prctGlob.Ychange.values[1,2],obj$ErrorRateVglobal.threshold[(obj$ErrorRateVglobal.threshold$variable=="global" & obj$ErrorRateVglobal.threshold$dataP == dimlabP[1]),"mean"], 
              col="black", pch=16)
-      legend("bottomright", c("ERv.threshold","ERv.threshold regression line","ERv.threshold without permut."),
+      legend("bottomright", legend = c("ERv.threshold","ERv.threshold regression line","ERv.threshold without permut."),
              pch=c(16,NA,16), pt.cex=c(0.8,NA,1), 
              lty=c(NA,1,NA), lwd=c(NA,1,NA), cex=1, 
              col=c("grey","black","black"))
@@ -84,7 +84,7 @@ plot_permut_mbplsda <- function(obj, filename="PlotPermutationTest", MainPlot="P
     abline(regressionAUC, lty=1, lwd=1)
     points(obj$prctGlob.Ychange.values[1,2],obj$AUCv.global[(obj$AUCv.global$variable=="Mean" & obj$AUCv.global$dataP == dimlabP[1]),"mean"], 
            col="black", pch=16, cex=1)
-    legend("topright", c("AUCv","AUCv regression line","AUCv without permut."),
+    legend("topright", legend = c("AUCv","AUCv regression line","AUCv without permut."),
            pch=c(16,NA,16), pt.cex=c(0.8,NA,1), 
            lty=c(NA,1,NA), lwd=c(NA,1,NA), cex=1, 
            col=c("grey","black","black"))

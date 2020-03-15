@@ -10,7 +10,7 @@ disjunctive <- function(y){
     yy <- as.factor(y[,i])
     lev <- levels(yy)
     nlevels <- length(lev)
-    zz <- data.frame(y = yy)
+    zz <- data.frame(y = yy, stringsAsFactors = TRUE)
     z[[i]] <- binarize(zz)
     colnames(z[[i]]) <- paste0(rep(colnames(y)[i],nlevels),"_",colnames(z[[i]]))
   }

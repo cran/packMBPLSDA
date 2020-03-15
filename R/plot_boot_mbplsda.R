@@ -33,7 +33,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
   hist(obj$vipc$mean, freq=F, main="Histogram and density curve of mean cumulated VIP", xlab="cumulated VIP")
   abline(v=mean(obj$vipc$mean, na.rm=T), lwd=4)
   lines(density(obj$vipc$mean), lwd=2)
-  legend("topright",c("density curve","mean cumulated VIP"), lwd=c(2,4), cex=0.8)
+  legend("topright",legend = c("density curve","mean cumulated VIP"), lwd=c(2,4), cex=0.8)
   
   ## higher than the 1-propbestvar quantile 
   obj$vipc <- obj$vipc[order(obj$vipc$mean, decreasing=FALSE),]
@@ -57,7 +57,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
        cex.axis=min(0.8,(50/nrow(vipcBest))) )
   mtext("variables", side=1, line=round((margebas-2),0))
   for(i in 1: nrow(vipcBest)) {segments(x0=i,y0=vipcBest[i,"95CIinf"], x1=i ,y1=vipcBest[i,"95CIsup"], lty=as.numeric(blocsVIPBest)[i])}
-  legend("bottomright",paste("block",levels(blocsVIP)), cex=0.8, lty=as.numeric(factor(levels(blocsVIP))), 
+  legend("bottomright", legend = paste("block",levels(blocsVIP)), cex=0.8, lty=as.numeric(factor(levels(blocsVIP))), 
          pch = formespch[as.numeric(factor(levels(blocsVIP)))],pt.bg = bgpch[as.numeric(factor(levels(blocsVIP)))] )
   par(mar=c(5, 4, 4, 2))
   
@@ -84,7 +84,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
          cex.axis=min(0.8,(50/nrow(faXBest))) )
     mtext("variables", side=1, line=(margebas-2))
     for(i in 1: nrow(faXBest)) {segments(x0=i,y0=faXBest[i,"95CIinf"], x1=i ,y1=faXBest[i,"95CIsup"], lty=as.numeric(blocsfaXBest)[i])}
-    legend("bottomright",paste("block",levels(blocsfaX)), cex=0.8, lty=as.numeric(factor(levels(blocsfaX))), 
+    legend("bottomright", legend = paste("block",levels(blocsfaX)), cex=0.8, lty=as.numeric(factor(levels(blocsfaX))), 
            pch = formespch[as.numeric(factor(levels(blocsfaX)))], pt.bg = bgpch[as.numeric(factor(levels(blocsfaX)))] )
     
     par(mar=c(5, 4, 4, 2))
@@ -108,7 +108,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
            xlim=c(minifaX,maxifaX)*1.05, ylim=c(minifaX,maxifaX)*1.05,
            las=1)
       abline(h=0,v=0)
-      legend("bottomright",paste("block",levels(blocsfaXall)), cex=0.8, 
+      legend("bottomright", legend = paste("block",levels(blocsfaXall)), cex=0.8, 
              pch = formespch[as.numeric(factor(levels(blocsfaXall)))], pt.bg=bgpch[as.numeric(factor(levels(blocsfaXall)))])
     }
   }
@@ -123,7 +123,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
          ylim=c(minifaX,maxifaX)*1.05,
          las=1)
     abline(h=0)
-    legend("bottomright",paste("block",levels(blocsfaXall)), cex=0.8, 
+    legend("bottomright", legend = paste("block",levels(blocsfaXall)), cex=0.8, 
            pch = formespch[as.numeric(factor(levels(blocsfaXall)))], pt.bg = bgpch[as.numeric(factor(levels(blocsfaXall)))])
     
   }
@@ -151,7 +151,7 @@ plot_boot_mbplsda <- function(obj, filename="PlotBootstrapMbplsda", propbestvar=
          cex.axis=min(0.8,(50/nrow(XYcoefBest))) )
     mtext("variables", side=1, line=(margebas-2))
     for(i in 1: nrow(XYcoefBest)) {segments(x0=i,y0=XYcoefBest[i,"95CIinf"], x1=i ,y1=XYcoefBest[i,"95CIsup"], lty=as.numeric(blocsXYcoefBest)[i])}
-    legend("bottomright",paste("block",levels(blocsXYcoef)), cex=0.8, lty=as.numeric(factor(levels(blocsXYcoef))), 
+    legend("bottomright", legend = paste("block",levels(blocsXYcoef)), cex=0.8, lty=as.numeric(factor(levels(blocsXYcoef))), 
            pch = formespch[as.numeric(factor(levels(blocsXYcoef)))], pt.bg = bgpch[as.numeric(factor(levels(blocsXYcoef)))])
     
     par(mar=c(5, 4, 4, 2))

@@ -37,7 +37,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
              xlab=colnames(initialScoresInd)[j], ylab=colnames(initialScoresInd)[j+1],
              las=1)
         abline(h=0,v=0)
-        legend("bottomright", c("0","1"), pch=c(16,16), col=c("grey","black"))
+        legend("bottomright", legend = c("0","1"), pch=c(16,16), col=c("grey","black"))
       }
     }
     
@@ -51,7 +51,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
                xlab=colnames(initialScoresInd)[j], ylab=colnames(initialScoresInd)[j+1],
                las=1)
           abline(h=0,v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("subset=validation, method=maximal value", cex=0.75)
         }
       }
@@ -68,7 +68,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
                xlab=colnames(initialScoresInd)[j], ylab=colnames(initialScoresInd)[j+1],
                las=1)
           abline(h=0,v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("subset=validation, method=center of gravity", cex=0.75)
         }
       }
@@ -85,7 +85,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
                xlab=colnames(initialScoresInd)[j], ylab=colnames(initialScoresInd)[j+1],
                las=1)
           abline(h=0,v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("subset=validation, method=threshold", cex=0.75)
         }
       }
@@ -110,7 +110,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
            xlab="observations", ylab="Ax1",
            las=1)
       abline(h=0)
-      legend("bottomright", c("0","1"), pch=c(16,16), col=c("grey","black"))
+      legend("bottomright", legend = c("0","1"), pch=c(16,16), col=c("grey","black"))
     }
     
     # scatter plot with coloration according to matPredYv.max
@@ -122,7 +122,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
              xlab="observations", ylab="Ax1",
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("subset=validation, method=maximal value", cex=0.75)
       }
     }
@@ -137,7 +137,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
              xlab="observations", ylab="Ax1",
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("subset=validation, method=center of gravity", cex=0.75)
       }
     }
@@ -151,7 +151,7 @@ plot_cvpred_mbplsda <- function (obj, filename="PlotCVpredMbplsda"){
              xlab="observations", ylab="Ax1",
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("subset=validation, method=threshold", cex=0.75)
       }
     }

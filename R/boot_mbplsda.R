@@ -22,7 +22,13 @@ boot_mbplsda <- function(object, nrepet = 199, optdim, cpus=1, ...){
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
+  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+    stop("ktabX must be in the Global Environment")
+  }
   X      <- eval.parent(appel$ktabX)
+  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+    stop("dudiY must be in the Global Environment")
+  }
   Y      <- eval.parent(appel$dudiY)  
   nr     <- nrow(Y$tab)  
   ncY    <- ncol(Y$tab)
@@ -67,9 +73,12 @@ boot_mbplsda <- function(object, nrepet = 199, optdim, cpus=1, ...){
   }
   stopCluster(cl)
   on.exit(stopCluster)
-  resForeach
+#  resForeach
   
   nrepetFE <- length(resForeach)
+  if((nrepetFE<1.5)|(is.null(nrepetFE)==TRUE)){
+    stop("No adjustement of models")
+  }
   
   ## prepare the outputs
   res <- list()    
@@ -113,7 +122,7 @@ boot_mbplsda <- function(object, nrepet = 199, optdim, cpus=1, ...){
     etype     <- round(apply(x,2,sd, na.rm=TRUE),5)
     quartiles <- round(t(apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),5)
     IC        <- t(apply(x, 2, IC95))
-    result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles)
+    result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles, stringsAsFactors = TRUE)
     colnames(result) <- c("nb", "mean", "sd", "95CIinf", "95CIsup","Q2.5", "median", "Q97.5")
     rownames(result) <- colnames(x)
     return(result)
@@ -122,7 +131,7 @@ boot_mbplsda <- function(object, nrepet = 199, optdim, cpus=1, ...){
   
   
   ## means on repetitions
-  block              <- unlist(sapply(1:nblo, function(b) rep(names(X$blo)[b], (X$blo)[b])))
+  block              <- unlist(list(sapply(1:nblo, function(b) rep(names(X$blo)[b], (X$blo)[b]))))
   blocks             <- names(X$blo) 
   variables          <- colnames(object$tabX)
   

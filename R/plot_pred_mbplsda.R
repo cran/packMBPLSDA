@@ -48,7 +48,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
              xlim=c(miniScoresInd,maxiScoresInd)*1.05, ylim=c(miniScoresInd,maxiScoresInd)*1.05,
              xlab=colnames(obj$lX)[j], ylab=colnames(obj$lX)[j+1],
              las=1)
-        legend("bottomright", c("0","1"), pch=c(16,16), col=c("grey","black"))
+        legend("bottomright", legend = c("0","1"), pch=c(16,16), col=c("grey","black"))
         abline(h=0, v=0)
       }
     }
@@ -63,7 +63,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
                xlab=colnames(obj$lX)[j], ylab=colnames(obj$lX)[j+1],
                las=1)
           abline(h=0, v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("method=maximal value", cex=0.75)
         }
       }
@@ -79,7 +79,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
                xlab=colnames(obj$lX)[j], ylab=colnames(obj$lX)[j+1],
                las=1)
           abline(h=0, v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("method=center of gravity", cex=0.75)
         }
       }
@@ -96,7 +96,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
                xlab=colnames(obj$lX)[j], ylab=colnames(obj$lX)[j+1],
                las=1)
           abline(h=0, v=0)
-          legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+          legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
           mtext("method=threshold", cex=0.75)
         }
       }
@@ -118,7 +118,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
            ylim=c(miniScoresInd,maxiScoresInd)*1.05,
            xlab="observations", ylab=colnames(obj$lX)[(q+2)],
            las=1)
-      legend("bottomright", c("0","1"), pch=c(16,16), col=c("grey","black"))
+      legend("bottomright", legend = c("0","1"), pch=c(16,16), col=c("grey","black"))
       abline(h=0)
     }
     
@@ -131,7 +131,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
              xlab="observations", ylab=colnames(obj$lX)[(q+2)],
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("method=maximal value", cex=0.75)
       }
     }
@@ -146,7 +146,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
              xlab="observations", ylab=colnames(obj$lX)[(q+2)],
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("method=center of gravity", cex=0.75)
       }
     }
@@ -161,7 +161,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
              xlab="observations", ylab=colnames(obj$lX)[(q+2)],
              las=1)
         abline(h=0)
-        legend("bottomright", c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
+        legend("bottomright", legend = c("0","1","NA"), pch=c(16,16,1), col=c("grey","black","black"))
         mtext("method=threshold", cex=0.75)
       }
     }
@@ -183,7 +183,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
   hist(obj$VIPc[,optdim+2], freq=F, main="Histogram and density curve of cumulated VIP", xlab="cumulated VIP")
   abline(v=mean(obj$VIPc[,optdim+2], na.rm=TRUE), lwd=4)
   lines(density(obj$VIPc[,optdim+2]), lwd=2)
-  legend("topright",c("density curve","mean cumulated VIP"), lwd=c(2,4), cex=0.8)
+  legend("topright",legend = c("density curve","mean cumulated VIP"), lwd=c(2,4), cex=0.8)
   
   ## higher than the 1-propbestvar quantile 
   obj$VIPc <- obj$VIPc[order(obj$VIPc[,optdim+2], decreasing=FALSE),]
@@ -207,7 +207,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
   axis(1, at=seq(from=1, to=nrow(VIPcBest)), labels=VIPcBest$variables, las=2, 
        cex.axis=min(0.8,(50/nrow(VIPcBest))) )
   mtext("variables", side=1, line=(margebas-2))
-  legend("bottomright",paste("block",levels(blocsVIP)), cex=0.8, 
+  legend("bottomright",legend = paste("block",levels(blocsVIP)), cex=0.8, 
          pch = formespch[as.numeric(factor(levels(blocsVIP)))], pt.bg= bgpch[as.numeric(factor(levels(blocsVIP)))])
   par(mar=c(5, 4, 4, 2))
   
@@ -234,7 +234,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
     axis(1, at=seq(from=1, to=nrow(faXBest)), labels=faXBest$variables, las=2, 
          cex.axis=min(0.8,(50/nrow(faXBest))) )
     mtext("variables", side=1, line=(margebas-2))
-    legend("bottomright",paste("block",levels(blocsfaX)), cex=0.8, 
+    legend("bottomright",legend = paste("block",levels(blocsfaX)), cex=0.8, 
            pch = formespch[as.numeric(factor(levels(blocsfaX)))], pt.bg = bgpch[as.numeric(factor(levels(blocsfaX)))])
     
     par(mar=c(5, 4, 4, 2))
@@ -256,7 +256,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
            xlim=c(minifaX,maxifaX)*1.05, ylim=c(minifaX,maxifaX)*1.05,
            xlab=colnames(obj$faX)[j], ylab=colnames(obj$faX)[j+1],
            las=1)
-      legend("bottomright", levels(obj$faX$block), cex=0.8, 
+      legend("bottomright", legend = levels(obj$faX$block), cex=0.8, 
              pch=formespch[as.numeric(factor(levels(factor(obj$faX$block))))], pt.bg=bgpch[as.numeric(factor(levels(factor(obj$faX$block))))])
       abline(h=0, v=0)
     }
@@ -272,7 +272,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
          ylim=c(minifaX,maxifaX)*1.05,
          xlab="variables", ylab=colnames(obj$faX)[3],
          las=1)
-    legend("bottomright", levels(obj$faX$block), cex=0.8, 
+    legend("bottomright", legend = levels(obj$faX$block), cex=0.8, 
            pch=formespch[as.numeric(factor(levels(factor(obj$faX$block))))],pt.bg=bgpch[as.numeric(factor(levels(factor(obj$faX$block))))])
     abline(h=0)
   }
@@ -303,7 +303,7 @@ plot_pred_mbplsda <- function (obj, filename="PlotPredMbplsda", propbestvar=0.5)
     axis(1, at=seq(from=1, to=nrow(XYcoefBest)), labels=XYcoefBest$variables, las=2, 
          cex.axis=min(0.8,(50/nrow(XYcoefBest))))
     mtext("variables", side=1, line=(margebas-2))
-    legend("bottomright",paste("block",levels(blocsXYcoef)), cex=0.8, 
+    legend("bottomright",legend = paste("block",levels(blocsXYcoef)), cex=0.8, 
            pch = formespch[as.numeric(factor(levels(blocsXYcoef)))], pt.bg=bgpch[as.numeric(factor(levels(blocsXYcoef)))])
     
     par(mar=c(5, 4, 4, 2))

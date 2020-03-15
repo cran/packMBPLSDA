@@ -29,7 +29,13 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
+  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+    stop("ktabX must be in the Global Environment")
+  }
   X      <- eval.parent(appel$ktabX)
+  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+    stop("dudiY must be in the Global Environment")
+  }
   Y      <- eval.parent(appel$dudiY)  
   nr     <- nrow(Y$tab)  
   q      <- ncol(Y$tab)
@@ -40,7 +46,7 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
   Ky     <- length(bloY) # nb of Y variables
   
   Var    <- as.factor(rep(1 : Ky, bloY))
-  Mod    <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
+#  Mod    <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
   cnames <- colnames(Y$tab) #paste0("Var",Var,"Mod",Mod)
   
   nblo   <- length(X$blo)  # nb X blocks
@@ -53,16 +59,16 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
   
   # step 3. preparation of permutation outputs
   res                          <- list()
-  res$RV.YYpermut.values       <- data.frame(dimlabP,rep(NA, (npermut+1)))
+  res$RV.YYpermut.values       <- data.frame(dimlabP,rep(NA, (npermut+1)), stringsAsFactors = TRUE)
   colnames(res$RV.YYpermut.values) <- c("dimlabP","RV.YYpermut.values")
   
-  res$cor.YYpermut.values      <- data.frame(dimlabP,matrix(NA, ncol=q, nrow=(npermut+1))) #, dimnames=list(dimlabP, cnames))
+  res$cor.YYpermut.values      <- data.frame(dimlabP,matrix(NA, ncol=q, nrow=(npermut+1)), stringsAsFactors = TRUE) #, dimnames=list(dimlabP, cnames))
   colnames(res$cor.YYpermut.values) <- c("dimlabP",cnames)
   
-  res$prctGlob.Ychange.values <- data.frame(dimlabP,rep(NA, (npermut+1)))
+  res$prctGlob.Ychange.values <- data.frame(dimlabP,rep(NA, (npermut+1)), stringsAsFactors = TRUE)
   colnames(res$prctGlob.Ychange.values) <- c("dimlabP","prctGlob.Ychange.values")
   
-  res$prct.Ychange.values     <- data.frame(dimlabP, matrix(NA, ncol=q, nrow=(npermut+1))) #, dimnames=list(dimlabP, cnames))
+  res$prct.Ychange.values     <- data.frame(dimlabP, matrix(NA, ncol=q, nrow=(npermut+1)), stringsAsFactors = TRUE) #, dimnames=list(dimlabP, cnames))
   colnames(res$prct.Ychange.values) <- c("dimlabP",cnames)
   
   ## means
@@ -145,9 +151,9 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
     rownames(Ypermut$tab)        <- rownames(Y$tab)
     
     # P.2. Correlations/similarities initial and permutated Y block
-    res$cor.YYpermut.values[j,2:(q+1)]     <- sapply(1:q, function(Q) cor(Y$tab[,Q], Ypermut$tab[,Q]))
+    res$cor.YYpermut.values[j,2:(q+1)]    <- sapply(1:q, function(Q) cor(Y$tab[,Q], Ypermut$tab[,Q]))
     res$prct.Ychange.values[j,2:(q+1)]    <- sapply(1:q, function(Q) (sum(Y$tab[,Q] != Ypermut$tab[,Q])/nr)) 
-    res$RV.YYpermut.values[j,2]            <- coeffRV(Y$tab,Ypermut$tab)$rv
+    res$RV.YYpermut.values[j,2]           <- coeffRV(Y$tab,Ypermut$tab)$rv
     res$prctGlob.Ychange.values[j,2]      <- sum((Y$tab - Ypermut$tab)^2)/(nr*q)
  
     # P.3. Preparation of the parallelized processing
@@ -158,7 +164,7 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
   
     # P.4. start of the parallelized iterations (repetitions / cross validation)
     resForeach <- foreach(i = 1:nrepet, .export=c ("mbplsda", "inertie", "ginv"), .packages=c("ade4","pROC"), .errorhandling="remove") %dopar%{
-  
+ 
       set.seed(seed=i)
       
       ## I.1. Dividing X and Y into calibration (Xc, Yc) and validation (Xv, Yv) datasets. 
@@ -185,14 +191,14 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
     
       ## I.3. variable matrix
       ## Xc brute 
-      Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo])
+      Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo], stringsAsFactors = TRUE)
       
       ## Means and biased sd of Xc variables (to use with mbpls in ade4)
       rescal$meanX        <- colMeans(Xc.mat) # equivalent to rescal$meanX
       rescal$sdX          <- apply(Xc.mat, 2, sd) * sqrt((Nc-1)/Nc)  # biaised sd, equivalent to rescal$sdX
       
       ## Xv: Xv brute, Xv centred considering Xc means, Xv centred reduced weighted considering means, sd and intertia of Xc blocks
-      Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo])
+      Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo], stringsAsFactors = TRUE)
       
       Xv.c   <- sweep(Xv.raw, 2, rescal$meanX, FUN="-") # equivalent to Xv.raw - rep(rescal$meanX, each=Nv)
       
@@ -467,9 +473,12 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
   
     stopCluster(cl)
     on.exit(stopCluster)
-    resForeach
+#    resForeach
     
     nrepetFE       <- length(resForeach)
+    if((nrepetFE<1.5)|(is.null(nrepetFE)==TRUE)){
+      stop("No adjustement of models")
+    }
     #res$TRUEnrepet <- nrepetFE
     
     # step 5. prepare outputs 
@@ -611,7 +620,7 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
       etype     <- round(apply(x,2,sd, na.rm=TRUE),5)
       quartiles <- round(t(apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),5)
       IC        <- t(apply(x, 2, IC95))
-      result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles)
+      result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles, stringsAsFactors = TRUE)
       colnames(result) <- c("nb", "mean", "sd", "95CIinf", "95CIsup","Q2.5", "median", "Q97.5")
       rownames(result) <- colnames(x)
       return(result)
@@ -910,7 +919,7 @@ permut_mbplsda <- function(object, optdim, bloY, algo=c("max","gravity","thresho
     }
     if(("ER" %in% outputs) | ("AUC" %in% outputs)){
       #res$ttestMeanERv           <- res$ttestMeanERv[complete.cases(res$ttestMeanERv), ]
-      res$ttestMeanERv           <- data.frame(ttest= rownames(res$ttestMeanERv),res$ttestMeanERv)
+      res$ttestMeanERv           <- data.frame(ttest= rownames(res$ttestMeanERv),res$ttestMeanERv, stringsAsFactors = TRUE)
       rownames(res$ttestMeanERv) <- NULL
     }
   }

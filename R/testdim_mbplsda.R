@@ -13,7 +13,7 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
   
   # step 0. packages 
   
-  #library(microbenchmark) # to test performances
+#  library(microbenchmark) # to test performances
 #  library(parallel)  # to repart jobs
 #  library(doParallel) # to perform iterations independantly
 #  library(foreach)
@@ -26,7 +26,13 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
+  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+    stop("ktabX must be in the Global Environment")
+  }
   X      <- eval.parent(appel$ktabX)
+  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+    stop("dudiY must be in the Global Environment")
+  }
   Y      <- eval.parent(appel$dudiY)  
   nr     <- nrow(Y$tab)  
   q      <- ncol(Y$tab)
@@ -37,7 +43,7 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
   Ky     <- length(bloY) # nombre de blocs(variables) Y
   
   Var    <- as.factor(rep(1 : Ky, bloY))
-  Mod    <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
+  #Mod    <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
   cnames <- colnames(Y$tab) # paste0("Var",Var,"Mod",Mod)
   
   nblo   <- length(X$blo)  # nb X blocks
@@ -84,14 +90,14 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
     
     ## I.3. Matrix
     ## raw Xc  
-    Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo])
+    Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo], stringsAsFactors = TRUE)
     
     ## means and biased sd of Xc variables (to use with mbpls ade4)
     rescal$meanX        <- colMeans(Xc.mat) # equivalent to rescal$meanX
     rescal$sdX          <- apply(Xc.mat, 2, sd) * sqrt((Nc-1)/Nc)  # biaised sd, equivalent to rescal$sdX
     
     ## Xv: Xv raw, Xv centred considering Xc means, Xv centred reduced weighted considering means, sd, inertia of Xc blocks
-    Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo])
+    Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo], stringsAsFactors = TRUE)
     
     Xv.c   <- sweep(Xv.raw, 2, rescal$meanX, FUN="-") # equivalent to Xv.raw - rep(rescal$meanX, each=Nv)
     
@@ -392,9 +398,12 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
 
   stopCluster(cl)
   on.exit(stopCluster)
-  resForeach
+#  resForeach
   
   nrepetFE       <- length(resForeach)
+  if((nrepetFE<1.5)|(is.null(nrepetFE)==TRUE)){
+    stop("No adjustement of models. Try with less components")
+  }
   
   res <- NULL
   res$TRUEnrepet <- nrepetFE
@@ -472,7 +481,7 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
     etype     <- round(apply(x,2,sd, na.rm=TRUE),5)
     quartiles <- round(t(apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),5)
 	  IC        <- t(apply(x, 2, IC95))
-    result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles)
+    result    <- cbind.data.frame(nombre, moy, etype, IC, quartiles, stringsAsFactors = TRUE)
     colnames(result) <- c("nb", "mean", "sd", "95CIinf", "95CIsup","Q2.5", "median", "Q97.5")
     rownames(result) <- colnames(x)
     return(result)
@@ -485,8 +494,8 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
       RMSECglobalm[i,1:(dim(resForeach[[i]][["RMSEglobal"]])[1])] <- resForeach[[i]][["RMSEglobal"]][,"RMSEC"]
       RMSEVglobalm[i,1:(dim(resForeach[[i]][["RMSEglobal"]])[1])] <- resForeach[[i]][["RMSEglobal"]][,"RMSEV"]
     }
-    res$RMSEc.global <- data.frame(dimlab,stat.desc(RMSECglobalm))
-    res$RMSEv.global <- data.frame(dimlab,stat.desc(RMSEVglobalm))
+    res$RMSEc.global <- data.frame(dimlab,stat.desc(RMSECglobalm),stringsAsFactors = TRUE)
+    res$RMSEv.global <- data.frame(dimlab,stat.desc(RMSEVglobalm),stringsAsFactors = TRUE)
   }
   
   ## step 6.2. FP, VP, FN, VN and error rates means on repetitions

@@ -25,7 +25,13 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
+  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+    stop("ktabX must be in the Global Environment")
+  }
   X      <- eval.parent(appel$ktabX)
+  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+    stop("dudiY must be in the Global Environment")
+  }
   Y      <- eval.parent(appel$dudiY)  
   nr     <- nrow(Y$tab)  
   q      <- ncol(Y$tab)
@@ -85,14 +91,14 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
     
     ## I.3. variable matrix
     ## raw Xc  
-    Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo])
+    Xc.mat <- cbind.data.frame(unclass(Xc)[1:nblo], stringsAsFactors = TRUE)
     
     ## means and biased sd of Xc variables (to use with mbpls ade4)
     rescal$meanX        <- colMeans(Xc.mat) # equivalent to rescal$meanX
     rescal$sdX          <- apply(Xc.mat, 2, sd) * sqrt((Nc-1)/Nc)  # biaised sd, equivalent to rescal$sdX
     
     ## Xv: raw Xv , Xv centred with Xc means, Xv centred reduced weighted with means, sd, inertia of Xc blocks
-    Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo])
+    Xv.raw <- cbind.data.frame(unclass(Xv)[1:nblo], stringsAsFactors = TRUE)
     
     Xv.c   <- sweep(Xv.raw, 2, rescal$meanX, FUN="-") # equivalent to Xv.raw - rep(rescal$meanX, each=Nv)
     
@@ -281,10 +287,13 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
 
   stopCluster(cl)
   on.exit(stopCluster)
-  resForeach
+#  resForeach
   
   res <- NULL
   nrepetFE       <- length(resForeach)
+  if((nrepetFE<1.5)|(is.null(nrepetFE)==TRUE)){
+    stop("No adjustement of models")
+  }
   res$TRUEnrepet <- nrepetFE
   
   # step 5. prepare outputs 
@@ -350,7 +359,7 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
     etype     <- round(apply(x,2,sd, na.rm=TRUE),5)
     quartiles <- round(t(apply(x, 2, quantile, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)),5)
     IC        <- t(apply(x, 2, IC95))
-    result    <- cbind.data.frame(nombre, mod, moy, etype, IC, quartiles)
+    result    <- cbind.data.frame(nombre, mod, moy, etype, IC, quartiles, stringsAsFactors = TRUE)
     colnames(result) <- c("nb", "ModalValue", "Proba.be1", "sd", "95CIinf", "95CIsup","Q2.5", "median", "Q97.5")
     rownames(result) <- colnames(x)
     return(result)
@@ -419,8 +428,8 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
     res$matPredYc.gravity[,"GlobalAccuracy"]     <- apply(res$matPredYc.gravity[,1:(q+Ky)], min, MARGIN = 1)
     res$matPredYv.gravity[,"GlobalAccuracy"]     <- apply(res$matPredYv.gravity[,1:(q+Ky)], min, MARGIN = 1)
     
-    res$matPredYc.gravity <- data.frame(obs=rownames(Y$tab),Y$tab, matPREDcG, res$matPredYc.gravity)
-    res$matPredYv.gravity <- data.frame(obs=rownames(Y$tab),Y$tab, matPREDvG, res$matPredYv.gravity)
+    res$matPredYc.gravity <- data.frame(obs=rownames(Y$tab),Y$tab, matPREDcG, res$matPredYc.gravity, stringsAsFactors = TRUE)
+    res$matPredYv.gravity <- data.frame(obs=rownames(Y$tab),Y$tab, matPREDvG, res$matPredYv.gravity, stringsAsFactors = TRUE)
     colnames(res$matPredYc.gravity)[2:(q+1)] <- colnames(res$matPredYv.gravity)[2:(q+1)] <- paste0("Truth_",cnames)
     rownames(res$matPredYc.gravity) <- rownames(res$matPredYv.gravity) <- NULL
   }
@@ -448,11 +457,11 @@ cvpred_mbplsda <- function(object, nrepet = 100, threshold = 0.5, bloY, optdim, 
       res$matPredYc.threshold[n,(q+1):(q+Ky)] <- sapply(1:Ky, function(k)(min(1-(matPREDcT[n,Var == k] - Y$tab[n,Var == k])^2)))
       res$matPredYv.threshold[n,(q+1):(q+Ky)] <- sapply(1:Ky, function(k)(min(1-(matPREDvT[n,Var == k] - Y$tab[n,Var == k])^2)))
     }
-    res$matPredYc.threshold[,"GlobalAccuracy"]     <- apply(res$matPredYc.threshold[,1:(q+Ky)], min, MARGIN = 1)
-    res$matPredYv.threshold[,"GlobalAccuracy"]     <- apply(res$matPredYv.threshold[,1:(q+Ky)], min, MARGIN = 1)
+    res$matPredYc.threshold[,"GlobalAccuracy"] <- apply(res$matPredYc.threshold[,1:(q+Ky)], min, MARGIN = 1)
+    res$matPredYv.threshold[,"GlobalAccuracy"] <- apply(res$matPredYv.threshold[,1:(q+Ky)], min, MARGIN = 1)
     
-    res$matPredYc.threshold <- data.frame(obs=rownames(Y$tab), Y$tab, matPREDcT, res$matPredYc.threshold)
-    res$matPredYv.threshold <- data.frame(obs=rownames(Y$tab), Y$tab, matPREDvT, res$matPredYv.threshold)
+    res$matPredYc.threshold <- data.frame(obs=rownames(Y$tab), Y$tab, matPREDcT, res$matPredYc.threshold, stringsAsFactors = TRUE)
+    res$matPredYv.threshold <- data.frame(obs=rownames(Y$tab), Y$tab, matPREDvT, res$matPredYv.threshold, stringsAsFactors = TRUE)
     colnames(res$matPredYc.threshold)[2:(q+1)] <- colnames(res$matPredYv.threshold)[2:(q+1)] <- paste0("Truth_",cnames)
     rownames(res$matPredYc.threshold) <- rownames(res$matPredYv.threshold) <- NULL
   }

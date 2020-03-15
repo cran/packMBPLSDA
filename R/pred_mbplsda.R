@@ -18,7 +18,13 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
+  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+    stop("ktabX must be in the Global Environment")
+  }
   X      <- eval.parent(appel$ktabX)
+  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+    stop("dudiY must be in the Global Environment")
+  }
   Y      <- eval.parent(appel$dudiY)  
   nr     <- nrow(Y$tab)  
   q      <- ncol(Y$tab)
@@ -27,7 +33,7 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   Ky     <- length(bloY)
   
   Var <- as.factor(rep(1 : Ky, bloY))
-  Mod <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
+  #Mod <- unlist(sapply(1:Ky, function(x) rep(c(1:bloY[x]))))
   cnames <- colnames(Y$tab) #paste0("Var",Var,"Mod",Mod)
   
   blo    <- sapply(1:nblo, function(k) dim(X[[k]])[2]) # nb variables by X block
@@ -98,7 +104,7 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   intercept.cal <- sapply(rescal$intercept.raw, function(x) x[, optdim])
   
   # raw matrix
-  X.mat <- cbind.data.frame(lapply(unclass(X)[1:nblo], scale, center = FALSE, scale = FALSE))
+  X.mat <- cbind.data.frame(lapply(unclass(X)[1:nblo], scale, center = FALSE, scale = FALSE), stringsAsFactors = TRUE)
   
    
   # nb observations by Y category
@@ -233,27 +239,27 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   if("max" %in% algo){
     ## accuracy indicators
     for(n in 1:nr){
-      AccuracyPredY.max[n,(q+1):(q+Ky)]     <- sapply(1:Ky, function(k)(min(1-(ClassPredY.max[n,Var == k] - Y$tab[n,Var == k])^2)))
+      AccuracyPredY.max[n,(q+1):(q+Ky)] <- sapply(1:Ky, function(k)(min(1-(ClassPredY.max[n,Var == k] - Y$tab[n,Var == k])^2)))
     }
-    AccuracyPredY.max[,"global"]     <- apply(AccuracyPredY.max[,1:(q+Ky)], min, MARGIN = 1)
+    AccuracyPredY.max[,"global"]       <- apply(AccuracyPredY.max[,1:(q+Ky)], min, MARGIN = 1)
     ## error rates by variable and overall
-    ErrorRate.global["ErrorRate.max",]         <- 1-(apply(AccuracyPredY.max[,(q+1):(q+Ky+1)], mean, MARGIN = 2))
+    ErrorRate.global["ErrorRate.max",] <- 1-(apply(AccuracyPredY.max[,(q+1):(q+Ky+1)], mean, MARGIN = 2))
   }
   if("gravity" %in% algo){
     ## accuracy indicators
     for(n in 1:nr){
       AccuracyPredY.gravity[n,(q+1):(q+Ky)] <- sapply(1:Ky, function(k)(min(1-(ClassPredY.gravity[n,Var == k] - Y$tab[n,Var == k])^2)))
     }
-    AccuracyPredY.gravity[,"global"] <- apply(AccuracyPredY.gravity[,1:(q+Ky)], min, MARGIN = 1)
+    AccuracyPredY.gravity[,"global"]       <- apply(AccuracyPredY.gravity[,1:(q+Ky)], min, MARGIN = 1)
     ## error rates by variable and overall
-    ErrorRate.global["ErrorRate.gravity",]     <- 1-(apply(AccuracyPredY.gravity[,(q+1):(q+Ky+1)], mean, MARGIN = 2))
+    ErrorRate.global["ErrorRate.gravity",] <- 1-(apply(AccuracyPredY.gravity[,(q+1):(q+Ky+1)], mean, MARGIN = 2))
   }
   if("threshold" %in% algo){
     ## accuracy indicators
     for(n in 1:nr){
       AccuracyPredY.threshold[n,(q+1):(q+Ky)] <- sapply(1:Ky, function(k)(min(1-(ClassPredY.threshold[n,Var == k] - Y$tab[n,Var == k])^2)))
     }
-    AccuracyPredY.threshold[,"global"] <- apply(AccuracyPredY.threshold[,1:(q+Ky)], min, MARGIN = 1)
+    AccuracyPredY.threshold[,"global"]       <- apply(AccuracyPredY.threshold[,1:(q+Ky)], min, MARGIN = 1)
     ## error rates by variable and overall
     ErrorRate.global["ErrorRate.threshold",] <- 1-(apply(AccuracyPredY.threshold[,(q+1):(q+Ky+1)], mean, MARGIN = 2))
   }
@@ -279,23 +285,23 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   
   # coefficients, VIPc, BIPc, loadings, components
   
-  block     <- unlist(sapply(1:nblo, function(b) rep(names(X$blo)[b], (X$blo)[b])))
-  variables <- unlist(sapply(1:nblo, function(v) colnames(X[[v]])))
+  block     <- unlist(list(sapply(1:nblo, function(b) rep(names(X$blo)[b], (X$blo)[b]))))
+  variables <- unlist(list(sapply(1:nblo, function(v) colnames(X[[v]]))))
   
-  predictions$XYcoef <- data.frame(variables,block,sapply(rescal$XYcoef, function(x) x[, optdim]))
-  predictions$VIPc   <- data.frame(variables,block,rescal$vipc)
-  predictions$BIPc   <- data.frame(blocks=names(X$blo),rescal$bipc)
-  predictions$faX    <- data.frame(variables,block,rescal$faX)
-  predictions$lX     <- data.frame(obs=rnamesY,Y$tab,rescal$lX)
+  predictions$XYcoef <- data.frame(variables,block,sapply(rescal$XYcoef, function(x) x[, optdim]), stringsAsFactors = TRUE)
+  predictions$VIPc   <- data.frame(variables,block,rescal$vipc, stringsAsFactors = TRUE)
+  predictions$BIPc   <- data.frame(blocks=names(X$blo),rescal$bipc, stringsAsFactors = TRUE)
+  predictions$faX    <- data.frame(variables,block,rescal$faX, stringsAsFactors = TRUE)
+  predictions$lX     <- data.frame(obs=rnamesY,Y$tab,rescal$lX, stringsAsFactors = TRUE)
   rownames(predictions$XYcoef) <- rownames(predictions$VIPc) <- rownames(predictions$BIPc) <- rownames(predictions$faX) <- rownames(predictions$lX) <- NULL
   
   # 9. results matrix
   ConfMat.ErrorRate                       <- ConfMat.ErrorRate[complete.cases(ConfMat.ErrorRate), ]
-  predictions$ConfMat.ErrorRate           <- data.frame(rates=rownames(ConfMat.ErrorRate),ConfMat.ErrorRate)
+  predictions$ConfMat.ErrorRate           <- data.frame(rates=rownames(ConfMat.ErrorRate),ConfMat.ErrorRate, stringsAsFactors = TRUE)
   rownames(predictions$ConfMat.ErrorRate) <- NULL
   
   #ErrorRate.global                       <- ErrorRate.global[complete.cases(ErrorRate.global), ]
-  predictions$ErrorRate.global           <- data.frame(rates=rownames(ErrorRate.global),ErrorRate.global)
+  predictions$ErrorRate.global           <- data.frame(rates=rownames(ErrorRate.global),ErrorRate.global, stringsAsFactors = TRUE)
   predictions$ErrorRate.global           <- predictions$ErrorRate.global[complete.cases(ErrorRate.global), ]
   rownames(predictions$ErrorRate.global) <- NULL
   
@@ -316,7 +322,7 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   }
 
   if(sum(bloY!=2)==0){
-    predictions$AUC           <- data.frame(values=rownames(AUC),AUC,AUC.global)
+    predictions$AUC           <- data.frame(values=rownames(AUC),AUC,AUC.global, stringsAsFactors = TRUE)
     rownames(predictions$AUC) <- NULL
   }
 
