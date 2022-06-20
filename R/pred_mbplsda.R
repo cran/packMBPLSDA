@@ -18,11 +18,11 @@ pred_mbplsda <- function(object, optdim , threshold = 0.5, bloY, algo=c("max","g
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
-  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+  if(inherits(try(eval.parent(appel$ktabX), silent = TRUE),"try-error")==TRUE) {
     stop("ktabX must be in the Global Environment")
   }
   X      <- eval.parent(appel$ktabX)
-  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+  if(inherits(try(eval.parent(appel$dudiY), silent = TRUE)[1],"try-error")==TRUE) {
     stop("dudiY must be in the Global Environment")
   }
   Y      <- eval.parent(appel$dudiY)  

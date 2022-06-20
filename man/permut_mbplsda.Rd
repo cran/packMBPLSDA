@@ -116,22 +116,6 @@ at least 30 cross-validation repetitions and 100 Y-block with switching observat
 data(status)
 data(medical)
 data(omics)
-ktabX <- ktab.list.df(list(medical = medical[1:17,1:2], omics = omics[1:17,1:2]))
-disjonctif <- (disjunctive(data.frame(status=status[1:17,], 
-row.names = rownames(status)[1:17])))
-dudiY   <- dudi.pca(disjonctif , center = FALSE, scale = FALSE, scannf = FALSE)
-bloYobs <- 2
-ncpopt <- 1
-modelembplsQ <- mbplsda(dudiY, ktabX, scale = TRUE, option = "uniform", 
-scannf = FALSE, nf = 1)
-rtsPermut <- permut_mbplsda(modelembplsQ, nrepet = 3, npermut = 3, optdim = ncpopt, 
-outputs = c("ER"), bloY = bloYobs, nbObsPermut = 10, cpus = 1, algo = c("max"))
-}
-
-\donttest{
-data(status)
-data(medical)
-data(omics)
 data(nutrition)
 ktabX <- ktab.list.df(list(medical = medical[1:20,], omics = omics[1:20,]))
 disjonctif <- (disjunctive(data.frame(status=status[1:20,], 

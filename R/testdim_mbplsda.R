@@ -26,11 +26,11 @@ testdim_mbplsda <- function(object, nrepet = 100, algo = c("max", "gravity", "th
   method <- as.character(appel[[1]])
   scale  <- eval.parent(appel$scale)
   option <- eval.parent(appel$option)
-  if(class(try(eval.parent(appel$ktabX), silent = TRUE))=="try-error") {
+  if(inherits(try(eval.parent(appel$ktabX), silent = TRUE),"try-error")==TRUE) {
     stop("ktabX must be in the Global Environment")
   }
   X      <- eval.parent(appel$ktabX)
-  if(class(try(eval.parent(appel$dudiY), silent = TRUE))[1]=="try-error") {
+  if(inherits(try(eval.parent(appel$dudiY), silent = TRUE)[1],"try-error")==TRUE) {
     stop("dudiY must be in the Global Environment")
   }
   Y      <- eval.parent(appel$dudiY)  

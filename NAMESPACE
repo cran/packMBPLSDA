@@ -1,6 +1,5 @@
 export("boot_mbplsda", "cvpred_mbplsda", "disjunctive", "mbplsda", "permut_mbplsda", "plot_boot_mbplsda", "plot_cvpred_mbplsda", "plot_permut_mbplsda", "plot_pred_mbplsda","plot_testdim_mbplsda", "pred_mbplsda", "testdim_mbplsda")
 import(ade4, pROC)
-importFrom(DiscriMiner, binarize)
 importFrom(FactoMineR, coeffRV)
 importFrom(MASS, ginv)
 importFrom("stats", cor, density, lm, nobs, sd, t.test, anova, complete.cases, lm.wfit, quantile)
